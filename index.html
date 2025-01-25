@@ -59,21 +59,23 @@
           canvas.width = transparentImage.width;
           canvas.height = transparentImage.height;
 
-          // Calculate scaling for uploaded image
+          // Calculate scaling for uploaded image to fit vertically
           const scale = Math.min(
             canvas.width / uploadedImage.width,
             canvas.height / uploadedImage.height
           );
           const scaledWidth = uploadedImage.width * scale;
           const scaledHeight = uploadedImage.height * scale;
+
+          // Center the uploaded image within the canvas
           const offsetX = (canvas.width - scaledWidth) / 2;
           const offsetY = (canvas.height - scaledHeight) / 2;
 
-          // Draw uploaded image on canvas
+          // Draw the uploaded image on the canvas
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(uploadedImage, offsetX, offsetY, scaledWidth, scaledHeight);
 
-          // Draw transparent PNG on top
+          // Draw the transparent PNG on top
           ctx.drawImage(transparentImage, 0, 0);
         };
       };
