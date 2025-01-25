@@ -60,20 +60,14 @@
           canvas.height = transparentImage.height;
 
           // Calculate scaling for uploaded image to fit vertically
-          const scale = Math.min(
-            canvas.width / uploadedImage.width,
-            canvas.height / uploadedImage.height
-          );
+          const scale = canvas.height / uploadedImage.height;
           const scaledWidth = uploadedImage.width * scale;
-          const scaledHeight = uploadedImage.height * scale;
-
-          // Center the uploaded image within the canvas
+          const scaledHeight = canvas.height;
           const offsetX = (canvas.width - scaledWidth) / 2;
-          const offsetY = (canvas.height - scaledHeight) / 2;
 
           // Draw the uploaded image on the canvas
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(uploadedImage, offsetX, offsetY, scaledWidth, scaledHeight);
+          ctx.drawImage(uploadedImage, offsetX, 0, scaledWidth, scaledHeight);
 
           // Draw the transparent PNG on top
           ctx.drawImage(transparentImage, 0, 0);
