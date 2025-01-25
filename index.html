@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Overlay App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      max-width: 100%;
+    }
+
+    input[type="file"] {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image Overlay App</h1>
+    <p>Upload a picture to place it behind the transparent PNG:</p>
+    <input type="file" id="upload" accept="image/*">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <script>
+    const pngUrl = 'https://raw.githubusercontent.com/your-username/your-repo/main/your-image.png'; // Replace with your GitHub PNG URL
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const transparentImage = new Image();
+    transparentImage.crossOrigin = 'anonymous';
+    transparentImage.src = pngUrl;
+
+    document.getElementById('upload').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const uploadedImage = new Image();
+        uploadedImage.src = e.target.result;
+        uploadedImage.onload = () => {
+          // Set canvas size to the PNG's dimensions
+          canvas.width = transparentImage.width;
+          canvas.height = transparentImage.height;
+
+          // Calculate scaling for uploaded image
+          const scale = Math.min(
+            canvas.width / uploadedImage.width,
+            canvas.height / uploadedImage.height
+          );
+          const scaledWidth = uploadedImage.width * scale;
+          const scaledHeight = uploadedImage.height * scale;
+          const offsetX = (canvas.width - scaledWidth) / 2;
+          const offsetY = (canvas.height - scaledHeight) / 2;
+
+          // Draw uploaded image on canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(uploadedImage, offsetX, offsetY, scaledWidth, scaledHeight);
+
+          // Draw transparent PNG on top
+          ctx.drawImage(transparentImage, 0, 0);
+        };
+      };
+      reader.readAsDataURL(file);
+    });
+
+    transparentImage.onload = () => {
+      // Initialize canvas with just the PNG
+      canvas.width = transparentImage.width;
+      canvas.height = transparentImage.height;
+      ctx.drawImage(transparentImage, 0, 0);
+    };
+  </script>
+</body>
+</html>
